@@ -4,7 +4,7 @@
   "main": "main.mjs",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/main.mjs --bundle --outfile=dist.mjs --platform=node --target=node16",
+    "build": "esbuild src/main.mjs --bundle --outfile=dist.mjs --format=esm --platform=node --target=node16",
     "lint": "eslint ./src/* --fix",
     "prepare": "husky install"
   },
