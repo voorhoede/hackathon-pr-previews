@@ -37,7 +37,7 @@ async function main() {
 				state: 'success',
 				target_url
 			});
-			const QR = await QRCode.toDataURL(target_url);
+			const QR = await QRCode.toString(target_url, { type: 'svg' })
 			await createComment(`\n${QR}[Preview this deployment](${target_url})`)
 			await deployStatus
 		})
