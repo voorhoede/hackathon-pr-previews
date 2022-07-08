@@ -38,6 +38,7 @@ async function main() {
 				target_url
 			});
 			generate(target_url, async function (qrcode) {
+				console.log(qrcode)
 				await createComment(`\n${qrcode}\n[Preview this deployment](${target_url})`)
 				await deployStatus
 			});
