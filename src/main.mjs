@@ -37,11 +37,11 @@ async function main() {
 				state: 'success',
 				target_url
 			});
-			generate(target_url, async function (qrcode) {
+			generate(target_url, function (qrcode) {
 				console.log(qrcode)
-				await createComment(`\n\n[Preview this deployment](${target_url})`)
-				await deployStatus
 			});
+			await createComment(`\n\n[Preview this deployment](${target_url})`)
+			await deployStatus
 		})
 		.catch(async () => {
 			await octokit.rest.repos.createDeploymentStatus({
