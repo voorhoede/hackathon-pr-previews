@@ -9172,8 +9172,7 @@ async function main() {
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	console.log(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo);
-	const comment = commentIdentifier + (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
+	const comment = commentIdentifier + (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,

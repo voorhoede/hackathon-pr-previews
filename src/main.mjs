@@ -8,8 +8,7 @@ async function main() {
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	console.log(context.repo);
-	const comment = commentIdentifier + kebabCaseIt(`${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
+	const comment = commentIdentifier + kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: context.repo.owner,
