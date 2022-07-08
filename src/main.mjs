@@ -2,6 +2,7 @@ import { getInput, setFailed } from '@actions/core';
 import { getOctokit, context } from '@actions/github';
 import { kebabCaseIt } from "case-it";
 import sendToBucketFolder from "../lib/send-to-bucket-folder.js";
+import QRCode from "qrcode";
 
 async function main() {
 	const GITHUB_TOKEN = getInput('GITHUB_TOKEN')
@@ -19,6 +20,7 @@ async function main() {
 	})
 
 	const deployDir = kebabCaseIt(`${context.sha.substring(0, 6)}-${context.repo.repo}`)
+	const target_url = `https://${deployDir}.pr.voorhoede.nl`
 
 	sendToBucketFolder({
 		bucket: 'hackathon-pr-previews',
@@ -28,13 +30,15 @@ async function main() {
 		deployDir,
 	})
 		.then(async () => {
-			await octokit.rest.repos.createDeploymentStatus({
+			const deployStatus = octokit.rest.repos.createDeploymentStatus({
 				owner: context.repo.owner,
 				repo: context.repo.repo,
 				deployment_id,
 				state: 'success',
-				target_url: `https://${deployDir}.pr.voorhoede.nl`
+				target_url
 			});
+			await createComment(`\n${QRCode.toString('https://voorhoede.nl', { type: 'svg' })}[Preview this deployment](${target_url})`)
+			await deployStatus
 		})
 		.catch(async () => {
 			await octokit.rest.repos.createDeploymentStatus({
@@ -42,11 +46,41 @@ async function main() {
 				repo: context.repo.repo,
 				deployment_id,
 				state: 'error',
-				target_url: `https://${deployDir}.pr.voorhoede.nl`
+				target_url
 			});
 		})
 
+	/**
+	 *
+	 * @param body
+	 * @returns {Promise<void>}
+	 */
+	async function createComment(body) {
+		const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
+		const comment = commentIdentifier + body
+		const { data: comments } = await octokit.rest.issues.listComments({
+			owner: context.repo.owner,
+			repo: context.repo.repo,
+			issue_number: context.payload.pull_request.number,
+		});
+		const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
 
+		if (myComment) {
+			octokit.rest.issues.updateComment({
+				owner: context.repo.owner,
+				repo: context.repo.repo,
+				comment_id: myComment.id,
+				body: comment,
+			});
+		} else {
+			octokit.rest.issues.createComment({
+				owner: context.repo.owner,
+				repo: context.repo.repo,
+				issue_number: context.payload.pull_request.number,
+				body: comment,
+			});
+		}
+	}
 }
 
 main().catch(err => setFailed(err.message))
