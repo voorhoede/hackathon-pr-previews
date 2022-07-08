@@ -1,28 +1,34 @@
-const github = require('@actions/github');
-const core = require('@actions/core');
+const {setFailed} = require('@actions/core')
+const {getOctokit, context} = require('@actions/github');
 
-async function run() {
-	// This should be a token with access to your repository scoped in as a secret.
-	// The YML workflow will need to set myToken with the GitHub Secret Token
-	// GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-	// https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token#about-the-github_token-secret
-	const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
+async function main() {
+	const octokit = getOctokit(process.env.GITHUB_TOKEN);
 
-	const octokit = github.getOctokit(GITHUB_TOKEN)
+	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	// You can also pass in additional options as a second parameter to getOctokit
-	// const octokit = github.getOctokit(myToken, {userAgent: "MyActionVersion1"});
+	const comment = commentIdentifier + `Hello commit`
 
-	const { data: pullRequest } = await octokit.rest.pulls.get({
-		owner: 'octokit',
-		repo: 'rest.js',
-		pull_number: 123,
-		mediaType: {
-			format: 'diff'
-		}
+	const {data: comments} = await octokit.issues.listComments({
+		owner: context.repo.owner,
+		repo: context.repo.repo,
+		issue_number: process.env.PR_NUMBER,
 	});
-
-	console.log(pullRequest);
+	const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
+	if (myComment) {
+		octokit.issues.updateComment({
+			owner: context.repo.owner,
+			repo: context.repo.repo,
+			comment_id: myComment.id,
+			body: comment,
+		});
+	} else {
+		octokit.issues.createComment({
+			owner: context.repo.owner,
+			repo: context.repo.repo,
+			issue_number: process.env.PR_NUMBER,
+			body: comment,
+		});
+	}
 }
 
-run();
+main().catch(err => setFailed(err.message))
