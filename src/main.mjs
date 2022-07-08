@@ -6,7 +6,7 @@ async function main() {
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	const comment = commentIdentifier + process.env.GITHUB_REF
+	const comment = commentIdentifier + process.env.GITHUB_REF_NAME
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: context.repo.owner,
