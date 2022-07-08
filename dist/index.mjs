@@ -8964,7 +8964,7 @@ async function main() {
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	const comment = commentIdentifier + `Hello commit`
+	const comment = commentIdentifier + process.env.GITHUB_REF
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
