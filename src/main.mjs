@@ -2,7 +2,7 @@ import { getInput, setFailed } from '@actions/core';
 import { getOctokit, context } from '@actions/github';
 import { kebabCaseIt } from "case-it";
 import sendToBucketFolder from "../lib/send-to-bucket-folder.js";
-import QRCode from "qrcode";
+import {generate} from 'qrcode-terminal';
 
 async function main() {
 	const GITHUB_TOKEN = getInput('GITHUB_TOKEN')
@@ -37,9 +37,10 @@ async function main() {
 				state: 'success',
 				target_url
 			});
-			const QR = await QRCode.toString(target_url, { type: 'svg' })
-			await createComment(`\n${QR}[Preview this deployment](${target_url})`)
-			await deployStatus
+			generate(target_url, async function (qrcode) {
+				await createComment(`\n${qrcode}\n[Preview this deployment](${target_url})`)
+				await deployStatus
+			});
 		})
 		.catch(async () => {
 			await octokit.rest.repos.createDeploymentStatus({
