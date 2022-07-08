@@ -1,14 +1,13 @@
-name: CI
 on: [pull_request, workflow_dispatch]
+
 jobs:
   comment:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
+
       - name: Comment hello world
         uses: ./
-        env:
-          GITHUB_SHA: ${{ github.sha }}
-          GITHUB_REF: ${{ github.ref }}
-          GITHUB_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
