@@ -3,7 +3,7 @@ author: bazottie
 description: Deploy preview links on own hosting
 runs:
   using: node16
-  main: 'dist.mjs'
+  main: 'dist/index.mjs'
 branding:
   icon: cloud-lightning
   color: orange
