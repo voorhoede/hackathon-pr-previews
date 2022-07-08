@@ -19,7 +19,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Comment hello world
-        run: ./
+        uses: ./
         env:
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_TOKEN: ${{ github.token }}
