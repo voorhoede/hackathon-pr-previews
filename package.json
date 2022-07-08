@@ -4,7 +4,9 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "build": "esbuild main.js --bundle --outfile=dist/index.js --platform=node --target=node12"
+    "build": "esbuild main.js --bundle --outfile=dist/index.js --platform=node --target=node12",
+    "lint": "eslint . --fix",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,8 @@
     "@actions/github": "^5.0.3"
   },
   "devDependencies": {
-    "esbuild": "^0.14.48"
+    "esbuild": "^0.14.48",
+    "eslint": "^8.19.0",
+    "husky": "^8.0.1"
   }
 }
