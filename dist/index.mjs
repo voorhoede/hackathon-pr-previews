@@ -8959,16 +8959,18 @@ var __webpack_exports__ = {};
 
 
 async function main() {
-	const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(process.env.GITHUB_TOKEN)
+	const GITHUB_TOKEN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('GITHUB_TOKEN')
+	const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(GITHUB_TOKEN)
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	const comment = commentIdentifier + process.env.GITHUB_REF_NAME
+	console.log(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload);
+	const comment = commentIdentifier + _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.body
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-		issue_number: process.env.PR_NUMBER,
+		issue_number: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number,
 	});
 	const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
 	if (myComment) {
@@ -8982,7 +8984,7 @@ async function main() {
 		octokit.rest.issues.createComment({
 			owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 			repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-			issue_number: process.env.PR_NUMBER,
+			issue_number: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number,
 			body: comment,
 		});
 	}
