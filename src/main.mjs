@@ -1,5 +1,6 @@
 import { getInput, setFailed } from '@actions/core';
 import { getOctokit, context } from '@actions/github';
+import { kebabCaseIt } from "case-it";
 
 async function main() {
 	const GITHUB_TOKEN = getInput('GITHUB_TOKEN')
@@ -7,8 +8,8 @@ async function main() {
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	console.log(context.payload);
-	const comment = commentIdentifier + context.payload.pull_request.body
+	console.log(context.repo);
+	const comment = commentIdentifier + kebabCaseIt(`${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: context.repo.owner,
