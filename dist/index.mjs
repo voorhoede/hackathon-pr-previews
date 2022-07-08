@@ -4475,6 +4475,212 @@ function removeHook(state, name, method) {
 
 /***/ }),
 
+/***/ 4632:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+var space_1 = __nccwpck_require__(5316);
+/**
+ * Convert a `string` to camel case.
+ */
+function camelCaseIt(str) {
+    return space_1.spaceCaseIt(str).replace(/\s(\w)/g, function (matches, letter) { return letter.toUpperCase(); });
+}
+exports.camelCaseIt = camelCaseIt;
+
+
+/***/ }),
+
+/***/ 6285:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+var snake_1 = __nccwpck_require__(4778);
+/**
+ * Convert a `string` to constant case.
+ */
+function constantCaseIt(str) {
+    return snake_1.snakeCaseIt(str).toUpperCase();
+}
+exports.constantCaseIt = constantCaseIt;
+
+
+/***/ }),
+
+/***/ 2618:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+var space_1 = __nccwpck_require__(5316);
+/**
+ * Convert a `string` to dot case.
+ */
+function dotCaseIt(str) {
+    return space_1.spaceCaseIt(str).replace(/\s/g, ".");
+}
+exports.dotCaseIt = dotCaseIt;
+
+
+/***/ }),
+
+/***/ 4880:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+var __webpack_unused_export__;
+
+__webpack_unused_export__ = ({ value: true });
+var camel_1 = __nccwpck_require__(4632);
+__webpack_unused_export__ = camel_1.camelCaseIt;
+var constant_1 = __nccwpck_require__(6285);
+__webpack_unused_export__ = constant_1.constantCaseIt;
+var dot_1 = __nccwpck_require__(2618);
+__webpack_unused_export__ = dot_1.dotCaseIt;
+var kebab_1 = __nccwpck_require__(8067);
+exports.Nc = kebab_1.kebabCaseIt;
+var no_1 = __nccwpck_require__(2338);
+__webpack_unused_export__ = no_1.noCaseIt;
+var pascal_1 = __nccwpck_require__(9956);
+__webpack_unused_export__ = pascal_1.pascalCaseIt;
+var snake_1 = __nccwpck_require__(4778);
+__webpack_unused_export__ = snake_1.snakeCaseIt;
+var space_1 = __nccwpck_require__(5316);
+__webpack_unused_export__ = space_1.spaceCaseIt;
+
+
+/***/ }),
+
+/***/ 8067:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+var space_1 = __nccwpck_require__(5316);
+/**
+ * Convert a `string` to kebab case.
+ */
+function kebabCaseIt(str) {
+    return space_1.spaceCaseIt(str).replace(/\s/g, "-");
+}
+exports.kebabCaseIt = kebabCaseIt;
+
+
+/***/ }),
+
+/***/ 2338:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+/**
+ * Test whether a string is camel-case.
+ */
+var hasSpace = /\s/;
+var hasSeparator = /(_|-|\.|:)/;
+var hasCamel = /([a-z][A-Z]|[A-Z][a-z])/;
+/**
+ * Remove any starting case from a `string`, like camel or snake, but keep
+ * spaces and punctuation that may be important otherwise.
+ */
+function noCaseIt(str) {
+    if (hasSpace.test(str)) {
+        return str.toLowerCase();
+    }
+    if (hasSeparator.test(str)) {
+        return (unseparate(str) || str).toLowerCase();
+    }
+    if (hasCamel.test(str)) {
+        return uncamelize(str).toLowerCase();
+    }
+    return str.toLowerCase();
+}
+exports.noCaseIt = noCaseIt;
+/**
+ * Separator splitter.
+ */
+var separatorSplitter = /[\W_]+(.|$)/g;
+/**
+ * Un-separate a `string`.
+ */
+function unseparate(str) {
+    return str.replace(separatorSplitter, function (m, next) { return (next ? " " + next : ""); });
+}
+/**
+ * Camelcase splitter.
+ */
+var camelSplitter = /(.)([A-Z]+)/g;
+/**
+ * Un-camelcase a `string`.
+ */
+function uncamelize(str) {
+    return str.replace(camelSplitter, function (m, previous, uppers) {
+        return previous +
+            " " +
+            uppers
+                .toLowerCase()
+                .split("")
+                .join(" ");
+    });
+}
+
+
+/***/ }),
+
+/***/ 9956:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+var space_1 = __nccwpck_require__(5316);
+/**
+ * Convert a `string` to pascal case.
+ */
+function pascalCaseIt(str) {
+    return space_1.spaceCaseIt(str).replace(/(?:^|\s)(\w)/g, function (matches, letter) { return letter.toUpperCase(); });
+}
+exports.pascalCaseIt = pascalCaseIt;
+
+
+/***/ }),
+
+/***/ 4778:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+var space_1 = __nccwpck_require__(5316);
+/**
+ * Convert a `string` to snake case.
+ */
+function snakeCaseIt(str) {
+    return space_1.spaceCaseIt(str).replace(/\s/g, "_");
+}
+exports.snakeCaseIt = snakeCaseIt;
+
+
+/***/ }),
+
+/***/ 5316:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+var no_1 = __nccwpck_require__(2338);
+/**
+ * Convert a `string` to space case.
+ */
+function spaceCaseIt(str) {
+    return no_1.noCaseIt(str)
+        .replace(/[\W_]+(.|$)/g, function (matches, match) { return (match ? " " + match : ""); })
+        .trim();
+}
+exports.spaceCaseIt = spaceCaseIt;
+
+
+/***/ }),
+
 /***/ 8932:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -8955,21 +9161,23 @@ var __webpack_exports__ = {};
 (() => {
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
+/* harmony import */ var case_it__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4880);
+
 
 
 
 async function main() {
-	const GITHUB_TOKEN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('GITHUB_TOKEN');
+	const GITHUB_TOKEN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('GITHUB_TOKEN')
 	const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(GITHUB_TOKEN)
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	const comment = commentIdentifier + `Hello commit`
+	const comment = commentIdentifier + (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-		issue_number: process.env.PR_NUMBER,
+		issue_number: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number,
 	});
 	const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
 	if (myComment) {
@@ -8983,7 +9191,7 @@ async function main() {
 		octokit.rest.issues.createComment({
 			owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 			repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-			issue_number: process.env.PR_NUMBER,
+			issue_number: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number,
 			body: comment,
 		});
 	}
