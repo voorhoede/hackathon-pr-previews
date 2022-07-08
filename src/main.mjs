@@ -4,7 +4,7 @@ import { getOctokit, context } from '@actions/github';
 async function main() {
 	const GITHUB_TOKEN = getInput('GITHUB_TOKEN');
 	const octokit = getOctokit(GITHUB_TOKEN);
-	console.log({context})
+	console.log({context, octokit});
 }
 
 main().catch(err => setFailed(err.message))

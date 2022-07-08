@@ -8960,33 +8960,8 @@ var __webpack_exports__ = {};
 
 async function main() {
 	const GITHUB_TOKEN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('GITHUB_TOKEN');
-	const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(GITHUB_TOKEN)
-
-	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
-
-	const comment = commentIdentifier + `Hello commit`
-
-	const {data: comments} = await octokit.rest.issues.listComments({
-		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
-		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-		issue_number: process.env.PR_NUMBER,
-	});
-	const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
-	if (myComment) {
-		octokit.rest.issues.updateComment({
-			owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
-			repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-			comment_id: myComment.id,
-			body: comment,
-		});
-	} else {
-		octokit.rest.issues.createComment({
-			owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
-			repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-			issue_number: process.env.PR_NUMBER,
-			body: comment,
-		});
-	}
+	const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(GITHUB_TOKEN);
+	console.log({context: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context, octokit});
 }
 
 main().catch(err => (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(err.message))
