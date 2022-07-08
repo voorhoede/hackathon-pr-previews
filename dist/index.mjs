@@ -9178,7 +9178,7 @@ async function main() {
 		required_contexts: []
 	})
 
-	const deploymentName = (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
+	const deploymentName = (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.sha}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}`)
 
 	await octokit.rest.repos.createDeploymentStatus({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,

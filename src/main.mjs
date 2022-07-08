@@ -14,7 +14,7 @@ async function main() {
 		required_contexts: []
 	})
 
-	const deploymentName = kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
+	const deploymentName = kebabCaseIt(`${context.sha}-${context.repo.repo}-${context.payload.pull_request.head.ref}`)
 
 	await octokit.rest.repos.createDeploymentStatus({
 		owner: context.repo.owner,
