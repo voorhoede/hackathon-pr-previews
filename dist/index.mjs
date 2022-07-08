@@ -9005,10 +9005,34 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 159:
+/***/ ((module) => {
+
+module.exports = eval("require")("aws-sdk");
+
+
+/***/ }),
+
 /***/ 2877:
 /***/ ((module) => {
 
 module.exports = eval("require")("encoding");
+
+
+/***/ }),
+
+/***/ 1843:
+/***/ ((module) => {
+
+module.exports = eval("require")("globby");
+
+
+/***/ }),
+
+/***/ 8220:
+/***/ ((module) => {
+
+module.exports = eval("require")("mime");
 
 
 /***/ }),
@@ -9159,36 +9183,168 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
-/* harmony import */ var case_it__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4880);
+
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(2186);
+// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(5438);
+// EXTERNAL MODULE: ./node_modules/case-it/index.js
+var case_it = __nccwpck_require__(4880);
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(7147);
+// EXTERNAL MODULE: external "path"
+var external_path_ = __nccwpck_require__(1017);
+// EXTERNAL MODULE: ./node_modules/@vercel/ncc/dist/ncc/@@notfound.js?aws-sdk
+var _notfoundaws_sdk = __nccwpck_require__(159);
+// EXTERNAL MODULE: ./node_modules/@vercel/ncc/dist/ncc/@@notfound.js?globby
+var _notfoundglobby = __nccwpck_require__(1843);
+// EXTERNAL MODULE: ./node_modules/@vercel/ncc/dist/ncc/@@notfound.js?mime
+var _notfoundmime = __nccwpck_require__(8220);
+;// CONCATENATED MODULE: ./lib/send-to-bucket-folder.js
+// Core
+
+
+const { access, readFile } = external_fs_.promises
+
+// NPM
+;
+
+
+
+// Shared instance
+let s3
+
+// S3 defaults
+const S3_DEFAULTS = {
+	accessKeyId: null,
+	secretAccessKey: null,
+	region: 'eu-central-1', // Frankfurt
+}
+
+/**
+ * Initialize S3 client. Needs AWS credentials
+ * @param  {Object} params
+ */
+function initS3(params = {}) {
+	if (s3) return
+	const options = Object.assign({}, S3_DEFAULTS, params)
+	s3 = new _notfoundaws_sdk.S3(options)
+}
+
+/**
+ * Gets mimetype for a file path
+ *
+ * @param  {String} filePath
+ * @return {Promise}
+ */
+async function getFileBodyAndMime(filePath) {
+	return readFile(filePath)
+		.then(body => ({
+			body,
+			mimeType: _notfoundmime.getType(filePath) || 'application/octet-stream'
+		}))
+}
+
+/**
+ * Convert file to S3 object including bucket, key (folder path/filename, where
+ * the folder path uses the sha), content type and contents
+ *
+ * @param distFolder
+ * @param  {String} bucket
+ * @param deployDir
+ * @return {Promise}
+ */
+function convertFileToS3Object(distFolder, bucket, deployDir) {
+	return async file => {
+		try {
+			const { body, mimeType } = await getFileBodyAndMime(file)
+			const filename = file.replace(`${distFolder}/`, '')
+			return {
+				Bucket: bucket,
+				Key: (0,external_path_.join)(deployDir, filename),
+				ContentType: mimeType,
+				Body: body
+			}
+		} catch(error) {
+			throw new Error(`Could not convert file ${file} into S3 object\n=> ${error.message}`)
+		}
+	}
+}
+
+/**
+ * Upload objects to our bucket
+ *
+ * @return {Promise}
+ * @param objects
+ */
+function uploadS3Objects(objects) {
+	return Promise.all(objects.map(async object => s3.putObject(await object).promise()))
+}
+
+/* harmony default export */ const send_to_bucket_folder = (async (options) => {
+	const { accessKeyId, secretAccessKey, distFolder, bucket, deployDir } = options
+	initS3({
+		accessKeyId,
+		secretAccessKey,
+	})
+	await access(distFolder)
+	return (0,_notfoundglobby.globby)(`${distFolder}/**/*`)
+		.then(files => files.map(convertFileToS3Object(distFolder, bucket, deployDir)))
+		.then(uploadS3Objects)
+});
+
+;// CONCATENATED MODULE: ./src/main.mjs
+
 
 
 
 
 async function main() {
-	const GITHUB_TOKEN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('GITHUB_TOKEN')
-	const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(GITHUB_TOKEN)
+	const GITHUB_TOKEN = (0,core.getInput)('GITHUB_TOKEN')
+	const accessKeyId = (0,core.getInput)('ACCESS_KEY_ID')
+	const secretAccessKey = (0,core.getInput)('SECRET_ACCESS_KEY')
+	const distFolder = (0,core.getInput)('DIST_FOLDER')
+	const octokit = (0,github.getOctokit)(GITHUB_TOKEN)
 
 	const { data: { id: deployment_id } } = await octokit.rest.repos.createDeployment({
-		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
-		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-		ref: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref,
+		owner: github.context.repo.owner,
+		repo: github.context.repo.repo,
+		ref: github.context.payload.pull_request.head.ref,
 		environment: 'Preview',
 		required_contexts: []
 	})
 
-	const deploymentName = (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.sha}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}`)
+	const deployDir = (0,case_it/* kebabCaseIt */.Nc)(`${github.context.sha}-${github.context.repo.repo}-${github.context.payload.pull_request.head.ref}`)
 
-	await octokit.rest.repos.createDeploymentStatus({
-		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
-		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-		deployment_id,
-		state: 'success',
-		target_url: `https://${deploymentName}.pr.voorhoede.nl`
-	});
+	send_to_bucket_folder({
+		bucket: 'hackathon-pr-previews',
+		accessKeyId,
+		secretAccessKey,
+		distFolder,
+		deployDir,
+	})
+		.then(async () => {
+			await octokit.rest.repos.createDeploymentStatus({
+				owner: github.context.repo.owner,
+				repo: github.context.repo.repo,
+				deployment_id,
+				state: 'success',
+				target_url: `https://${deployDir}.pr.voorhoede.nl`
+			});
+		})
+		.catch(async () => {
+			await octokit.rest.repos.createDeploymentStatus({
+				owner: github.context.repo.owner,
+				repo: github.context.repo.repo,
+				deployment_id,
+				state: 'error',
+				target_url: `https://${deployDir}.pr.voorhoede.nl`
+			});
+		})
+
+
 }
 
-main().catch(err => (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(err.message))
+main().catch(err => (0,core.setFailed)(err.message))
 })();
 

@@ -12,3 +12,15 @@ inputs:
     description: GitHub token with access to the repo
     required: true
     default: ''
+  ACCESS_KEY_ID:
+    description: AWS Access key ID
+    required: true
+    default: ''
+  SECRET_ACCESS_KEY:
+    description: AWS Secret access key
+    required: true
+    default: ''
+  DIST_FOLDER:
+    description: Folder to deploy
+    required: true
+    default: ''
