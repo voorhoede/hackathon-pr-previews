@@ -8959,8 +8959,7 @@ var __webpack_exports__ = {};
 
 
 async function main() {
-	const GITHUB_TOKEN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('GITHUB_TOKEN');
-	const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(GITHUB_TOKEN)
+	const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(process.env.GITHUB_TOKEN)
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 

@@ -7,8 +7,3 @@ runs:
 branding:
   icon: cloud-lightning
   color: orange
-inputs:
-  GITHUB_TOKEN:
-    description: GitHub token with access to the repo
-    required: true
-    default: ''
