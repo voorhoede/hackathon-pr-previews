@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "build": "esbuild main.js --bundle --outfile=dist/index.js --platform=node --target=node16"
+    "build": "esbuild main.js --bundle --outfile=dist/index.js --platform=node --target=node12"
   },
   "repository": {
     "type": "git",
