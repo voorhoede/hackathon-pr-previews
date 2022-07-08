@@ -9178,15 +9178,15 @@ async function main() {
 		required_contexts: []
 	})
 
+	const deploymentName = (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
+
 	await octokit.rest.repos.createDeploymentStatus({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
 		deployment_id,
 		state: 'success',
+		target_url: `https://${deploymentName}.pr.voorhoede.nl`
 	});
-
-	const deploymentName = (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
-	console.log(deploymentName);
 }
 
 main().catch(err => (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(err.message))

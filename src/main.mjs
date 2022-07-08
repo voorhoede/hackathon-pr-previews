@@ -14,15 +14,15 @@ async function main() {
 		required_contexts: []
 	})
 
+	const deploymentName = kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
+
 	await octokit.rest.repos.createDeploymentStatus({
 		owner: context.repo.owner,
 		repo: context.repo.repo,
 		deployment_id,
 		state: 'success',
+		target_url: `https://${deploymentName}.pr.voorhoede.nl`
 	});
-
-	const deploymentName = kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
-	console.log(deploymentName);
 }
 
 main().catch(err => setFailed(err.message))
