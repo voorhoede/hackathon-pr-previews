@@ -37,7 +37,8 @@ async function main() {
 				state: 'success',
 				target_url
 			});
-			await createComment(`\n${QRCode.toString('https://voorhoede.nl', { type: 'svg' })}[Preview this deployment](${target_url})`)
+			const QR = await QRCode.toDataURL(target_url);
+			await createComment(`\n${QR}[Preview this deployment](${target_url})`)
 			await deployStatus
 		})
 		.catch(async () => {
