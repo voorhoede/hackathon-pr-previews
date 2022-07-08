@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Comment hello world
+      - name: Create deploy preview
         uses: ./
         with:
           GITHUB_TOKEN: ${{ github.token }}
