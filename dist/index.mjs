@@ -9170,41 +9170,23 @@ async function main() {
 	const GITHUB_TOKEN = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('GITHUB_TOKEN')
 	const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(GITHUB_TOKEN)
 
-	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
-
-	console.log(await octokit.rest.repos.createDeployment({
+	const { data: { id: deployment_id } } = await octokit.rest.repos.createDeployment({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
 		ref: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref,
 		environment: 'Preview',
 		required_contexts: []
-	}));
+	})
 
-	const deploymentName = commentIdentifier + (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
-
-	const {data: comments} = await octokit.rest.issues.listComments({
+	await octokit.rest.repos.createDeploymentStatus({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-		issue_number: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number,
+		deployment_id,
+		state: 'success',
 	});
 
-
-	const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
-	if (myComment) {
-		octokit.rest.issues.updateComment({
-			owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
-			repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-			comment_id: myComment.id,
-			body: deploymentName,
-		});
-	} else {
-		octokit.rest.issues.createComment({
-			owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
-			repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-			issue_number: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number,
-			body: deploymentName,
-		});
-	}
+	const deploymentName = (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
+	console.log(deploymentName);
 }
 
 main().catch(err => (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(err.message))
