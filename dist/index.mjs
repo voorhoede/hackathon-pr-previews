@@ -9172,27 +9172,36 @@ async function main() {
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	const comment = commentIdentifier + (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
+	const deploymentName = commentIdentifier + (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
+
+	console.log(octokit.rest.repos.createDeployment({
+		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
+		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
+		ref: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.ref,
+		environment: 'Preview'
+	}));
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
 		issue_number: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number,
 	});
+
+
 	const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
 	if (myComment) {
 		octokit.rest.issues.updateComment({
 			owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 			repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
 			comment_id: myComment.id,
-			body: comment,
+			body: deploymentName,
 		});
 	} else {
 		octokit.rest.issues.createComment({
 			owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 			repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
 			issue_number: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number,
-			body: comment,
+			body: deploymentName,
 		});
 	}
 }

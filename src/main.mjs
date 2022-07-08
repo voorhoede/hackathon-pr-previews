@@ -8,27 +8,36 @@ async function main() {
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	const comment = commentIdentifier + kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
+	const deploymentName = commentIdentifier + kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
+
+	console.log(octokit.rest.repos.createDeployment({
+		owner: context.repo.owner,
+		repo: context.repo.repo,
+		ref: context.payload.pull_request.ref,
+		environment: 'Preview'
+	}));
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: context.repo.owner,
 		repo: context.repo.repo,
 		issue_number: context.payload.pull_request.number,
 	});
+
+
 	const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
 	if (myComment) {
 		octokit.rest.issues.updateComment({
 			owner: context.repo.owner,
 			repo: context.repo.repo,
 			comment_id: myComment.id,
-			body: comment,
+			body: deploymentName,
 		});
 	} else {
 		octokit.rest.issues.createComment({
 			owner: context.repo.owner,
 			repo: context.repo.repo,
 			issue_number: context.payload.pull_request.number,
-			body: comment,
+			body: deploymentName,
 		});
 	}
 }
