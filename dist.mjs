@@ -1,7 +1,21 @@
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS({
@@ -6994,37 +7008,37 @@ var require_github = __commonJS({
   }
 });
 
-// main.js
-var { setFailed, getInput } = require_core();
-var { getOctokit, context } = require_github();
+// src/main.mjs
+var import_core = __toESM(require_core(), 1);
+var import_github = __toESM(require_github(), 1);
 async function main() {
-  const GITHUB_TOKEN = getInput("GITHUB_TOKEN");
-  const octokit = getOctokit(GITHUB_TOKEN);
+  const GITHUB_TOKEN = (0, import_core.getInput)("GITHUB_TOKEN");
+  const octokit = (0, import_github.getOctokit)(GITHUB_TOKEN);
   const commentIdentifier = "<!---HACKATHONPRPREVIEWS-->";
   const comment = commentIdentifier + `Hello commit`;
   const { data: comments } = await octokit.rest.issues.listComments({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
+    owner: import_github.context.repo.owner,
+    repo: import_github.context.repo.repo,
     issue_number: process.env.PR_NUMBER
   });
   const myComment = comments.find((comment2) => comment2.body.startsWith(commentIdentifier));
   if (myComment) {
     octokit.rest.issues.updateComment({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
+      owner: import_github.context.repo.owner,
+      repo: import_github.context.repo.repo,
       comment_id: myComment.id,
       body: comment
     });
   } else {
     octokit.rest.issues.createComment({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
+      owner: import_github.context.repo.owner,
+      repo: import_github.context.repo.repo,
       issue_number: process.env.PR_NUMBER,
       body: comment
     });
   }
 }
-main().catch((err) => setFailed(err.message));
+main().catch((err) => (0, import_core.setFailed)(err.message));
 /*!
  * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
  *

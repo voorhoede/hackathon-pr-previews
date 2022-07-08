@@ -1,5 +1,5 @@
-const {setFailed, getInput} = require('@actions/core')
-const {getOctokit, context} = require('@actions/github');
+import { setFailed, getInput } from '@actions/core';
+import { getOctokit, context } from '@actions/github';
 
 async function main() {
 	const GITHUB_TOKEN = getInput('GITHUB_TOKEN');
