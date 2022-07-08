@@ -18,7 +18,7 @@ async function main() {
 		required_contexts: []
 	})
 
-	const deployDir = kebabCaseIt(`${context.sha}-${context.repo.repo}-${context.payload.pull_request.head.ref}`)
+	const deployDir = kebabCaseIt(`${context.sha.substring(0, 6)}-${context.repo.repo}`)
 
 	sendToBucketFolder({
 		bucket: 'hackathon-pr-previews',
