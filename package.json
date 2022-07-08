@@ -1,0 +1,27 @@
+{
+  "name": "hackathon-pr-previews",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "build": "esbuild main.js --bundle --outfile=dist/index.js --platform=node --target=node16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/voorhoede/hackathon-pr-previews.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/voorhoede/hackathon-pr-previews/issues"
+  },
+  "homepage": "https://github.com/voorhoede/hackathon-pr-previews#readme",
+  "dependencies": {
+    "@actions/core": "^1.9.0",
+    "@actions/github": "^5.0.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.48"
+  }
+}

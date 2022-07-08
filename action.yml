@@ -1,0 +1,9 @@
+name: Hackathon PR Previews
+author: bazottie
+description: Deploy preview links on own hosting
+runs:
+  using: node16
+  main: 'dist/index.js'
+branding:
+  icon: cloud-lightning
+  color: orange
