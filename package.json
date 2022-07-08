@@ -6,7 +6,8 @@
   "scripts": {
     "build": "ncc build src/main.mjs",
     "lint": "eslint ./src/* --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "uploadfiles": "./uploadfiles.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,10 @@
   },
   "devDependencies": {
     "@vercel/ncc": "^0.34.0",
+    "aws-sdk": "^2.1170.0",
     "eslint": "^8.19.0",
-    "husky": "^8.0.1"
+    "globby": "^13.1.2",
+    "husky": "^8.0.1",
+    "mime": "^3.0.0"
   }
 }
