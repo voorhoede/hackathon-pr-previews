@@ -9172,14 +9172,15 @@ async function main() {
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	const deploymentName = commentIdentifier + (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
-
 	console.log(await octokit.rest.repos.createDeployment({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
 		ref: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref,
-		environment: 'Preview'
+		environment: 'Preview',
+		required_contexts: []
 	}));
+
+	const deploymentName = commentIdentifier + (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,

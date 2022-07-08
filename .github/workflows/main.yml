@@ -1,7 +1,7 @@
 name: CI
 on: [pull_request, workflow_dispatch]
 jobs:
-  comment:
+  deploy-preview:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -8,14 +8,15 @@ async function main() {
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
-	const deploymentName = commentIdentifier + kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
-
 	console.log(await octokit.rest.repos.createDeployment({
 		owner: context.repo.owner,
 		repo: context.repo.repo,
 		ref: context.payload.pull_request.head.ref,
-		environment: 'Preview'
+		environment: 'Preview',
+		required_contexts: []
 	}));
+
+	const deploymentName = commentIdentifier + kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
 
 	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: context.repo.owner,
