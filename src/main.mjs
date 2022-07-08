@@ -6,31 +6,23 @@ async function main() {
 	const GITHUB_TOKEN = getInput('GITHUB_TOKEN')
 	const octokit = getOctokit(GITHUB_TOKEN)
 
-	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
-
-	const comment = commentIdentifier + kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
-
-	const {data: comments} = await octokit.rest.issues.listComments({
+	const { data: { id: deployment_id } } = await octokit.rest.repos.createDeployment({
 		owner: context.repo.owner,
 		repo: context.repo.repo,
-		issue_number: context.payload.pull_request.number,
+		ref: context.payload.pull_request.head.ref,
+		environment: 'Preview',
+		required_contexts: []
+	})
+
+	const deploymentName = kebabCaseIt(`${context.sha}-${context.repo.repo}-${context.payload.pull_request.head.ref}`)
+
+	await octokit.rest.repos.createDeploymentStatus({
+		owner: context.repo.owner,
+		repo: context.repo.repo,
+		deployment_id,
+		state: 'success',
+		target_url: `https://${deploymentName}.pr.voorhoede.nl`
 	});
-	const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
-	if (myComment) {
-		octokit.rest.issues.updateComment({
-			owner: context.repo.owner,
-			repo: context.repo.repo,
-			comment_id: myComment.id,
-			body: comment,
-		});
-	} else {
-		octokit.rest.issues.createComment({
-			owner: context.repo.owner,
-			repo: context.repo.repo,
-			issue_number: context.payload.pull_request.number,
-			body: comment,
-		});
-	}
 }
 
 main().catch(err => setFailed(err.message))
