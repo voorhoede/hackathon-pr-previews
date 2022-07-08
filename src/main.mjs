@@ -10,10 +10,10 @@ async function main() {
 
 	const deploymentName = commentIdentifier + kebabCaseIt(`${context.repo.repo}-${context.payload.pull_request.head.ref}-${context.payload.pull_request.number}`)
 
-	console.log(octokit.rest.repos.createDeployment({
+	console.log(await octokit.rest.repos.createDeployment({
 		owner: context.repo.owner,
 		repo: context.repo.repo,
-		ref: context.payload.pull_request.ref,
+		ref: context.payload.pull_request.head.ref,
 		environment: 'Preview'
 	}));
 

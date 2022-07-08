@@ -9174,10 +9174,10 @@ async function main() {
 
 	const deploymentName = commentIdentifier + (0,case_it__WEBPACK_IMPORTED_MODULE_2__/* .kebabCaseIt */ .Nc)(`${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref}-${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number}`)
 
-	console.log(octokit.rest.repos.createDeployment({
+	console.log(await octokit.rest.repos.createDeployment({
 		owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
 		repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-		ref: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.ref,
+		ref: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.head.ref,
 		environment: 'Preview'
 	}));
 
