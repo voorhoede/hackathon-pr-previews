@@ -1,28 +1,29 @@
-const {setFailed} = require('@actions/core')
+const {setFailed, getInput} = require('@actions/core')
 const {getOctokit, context} = require('@actions/github');
 
 async function main() {
-	const octokit = getOctokit(process.env.GITHUB_TOKEN);
+	const GITHUB_TOKEN = getInput('GITHUB_TOKEN');
+	const octokit = getOctokit(GITHUB_TOKEN)
 
 	const commentIdentifier = '<!---HACKATHONPRPREVIEWS-->'
 
 	const comment = commentIdentifier + `Hello commit`
 
-	const {data: comments} = await octokit.issues.listComments({
+	const {data: comments} = await octokit.rest.issues.listComments({
 		owner: context.repo.owner,
 		repo: context.repo.repo,
 		issue_number: process.env.PR_NUMBER,
 	});
 	const myComment = comments.find(comment => comment.body.startsWith(commentIdentifier));
 	if (myComment) {
-		octokit.issues.updateComment({
+		octokit.rest.issues.updateComment({
 			owner: context.repo.owner,
 			repo: context.repo.repo,
 			comment_id: myComment.id,
 			body: comment,
 		});
 	} else {
-		octokit.issues.createComment({
+		octokit.rest.issues.createComment({
 			owner: context.repo.owner,
 			repo: context.repo.repo,
 			issue_number: process.env.PR_NUMBER,

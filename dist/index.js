@@ -1522,7 +1522,7 @@ var require_core = __commonJS({
       process.env["PATH"] = `${inputPath}${path.delimiter}${process.env["PATH"]}`;
     }
     exports.addPath = addPath;
-    function getInput(name, options) {
+    function getInput2(name, options) {
       const val = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
       if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
@@ -1532,16 +1532,16 @@ var require_core = __commonJS({
       }
       return val.trim();
     }
-    exports.getInput = getInput;
+    exports.getInput = getInput2;
     function getMultilineInput(name, options) {
-      const inputs = getInput(name, options).split("\n").filter((x) => x !== "");
+      const inputs = getInput2(name, options).split("\n").filter((x) => x !== "");
       return inputs;
     }
     exports.getMultilineInput = getMultilineInput;
     function getBooleanInput(name, options) {
       const trueValue = ["true", "True", "TRUE"];
       const falseValue = ["false", "False", "FALSE"];
-      const val = getInput(name, options);
+      const val = getInput2(name, options);
       if (trueValue.includes(val))
         return true;
       if (falseValue.includes(val))
@@ -6995,27 +6995,28 @@ var require_github = __commonJS({
 });
 
 // main.js
-var { setFailed } = require_core();
+var { setFailed, getInput } = require_core();
 var { getOctokit, context } = require_github();
 async function main() {
-  const octokit = getOctokit(process.env.GITHUB_TOKEN);
+  const GITHUB_TOKEN = getInput("GITHUB_TOKEN");
+  const octokit = getOctokit(GITHUB_TOKEN);
   const commentIdentifier = "<!---HACKATHONPRPREVIEWS-->";
   const comment = commentIdentifier + `Hello commit`;
-  const { data: comments } = await octokit.issues.listComments({
+  const { data: comments } = await octokit.rest.issues.listComments({
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: process.env.PR_NUMBER
   });
   const myComment = comments.find((comment2) => comment2.body.startsWith(commentIdentifier));
   if (myComment) {
-    octokit.issues.updateComment({
+    octokit.rest.issues.updateComment({
       owner: context.repo.owner,
       repo: context.repo.repo,
       comment_id: myComment.id,
       body: comment
     });
   } else {
-    octokit.issues.createComment({
+    octokit.rest.issues.createComment({
       owner: context.repo.owner,
       repo: context.repo.repo,
       issue_number: process.env.PR_NUMBER,
